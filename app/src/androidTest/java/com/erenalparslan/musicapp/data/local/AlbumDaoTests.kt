@@ -7,6 +7,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import com.erenalparslan.musicapp.DataGenerator
 import com.erenalparslan.musicapp.data.local.dao.AlbumDao
+import com.erenalparslan.musicapp.data.local.entities.Album
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -21,6 +22,8 @@ import org.junit.runner.RunWith
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 class AlbumDaoTests {
+
+    lateinit var  albums :List<Album>
 
     @get:Rule
         var instantTaskExecute=InstantTaskExecutorRule()
@@ -37,14 +40,25 @@ class AlbumDaoTests {
     }
 
     @Test
-    fun basicTest(){
+    fun isDatabaseNotNull(){
         assertThat(database).isNotNull()
+    }
+
+    @Test
+    fun isDaoNotNull(){
         assertThat(dao).isNotNull()
     }
 
     @Test
     fun insertAlbumSuccess() = runTest {
         val album = DataGenerator.getAlbum("ABC")
+        dao.insert(album)
+        assertThat(dao.getAll()).hasSize(1)
+    }
+
+    @Test
+    fun insertLongAlbumNameSuccess() = runTest {
+        val album = DataGenerator.getAlbum("ABCDEFGHIJKLMNOPRSTUCYZXWABCDEFGHIJKLMNOPRSTUCYZXW")
         dao.insert(album)
         assertThat(dao.getAll()).hasSize(1)
     }
@@ -58,6 +72,26 @@ class AlbumDaoTests {
         assertThat(dao.getAll().size).isEqualTo(2)
         assertThat(dao.getAll()).isNotEqualTo(1)
         assertThat(dao.getAll().size).isNotEqualTo(3)
+    }
+
+    @Test
+    fun insertAllAlbumSuccess() = runTest {
+        val album = DataGenerator.getAlbum("ABC")
+        val album1 = DataGenerator.getAlbum("ABC1")
+        albums= listOf(album,album1)
+        dao.insertAll(albums)
+        assertThat(dao.getAll()).hasSize(2)
+    }
+
+    @Test
+    fun insertAllAlbumFailure() = runTest {
+        val album = DataGenerator.getAlbum("ABC")
+        val album1 = DataGenerator.getAlbum("ABC1")
+        albums= listOf(album,album1)
+        dao.insertAll(albums)
+        assertThat(dao.getAll().size).isEqualTo(2)
+        assertThat(dao.getAll().size).isNotEqualTo(1)
+        assertThat(dao.getAll().size).isNotEqualTo(0)
     }
 
     @Test

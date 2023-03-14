@@ -9,6 +9,12 @@ import retrofit2.http.Query
 interface MusicAppApi {
 
     @GET("?method=artist.search&format=json")
+    suspend fun searchArtist(
+        @Query("artist") artistQuery: String,
+        @Query("api_key") apiKey: String
+    ): ArtistsSearchResponse
+
+    @GET("?method=artist.search&format=json")
     suspend fun searchArtistPaged(
         @Query("artist") artistQuery: String,
         @Query("api_key") apiKey: String,
