@@ -11,15 +11,12 @@ import com.erenalparslan.musicapp.databinding.FragmentTopalbumsBinding
 import com.erenalparslan.musicapp.presentation.base.BaseFragment
 import com.erenalparslan.musicapp.presentation.topalbum.adapter.TopAlbumListAdapter
 import com.erenalparslan.musicapp.presentation.topalbum.viewmodel.TopAlbumViewModel
+import com.erenalparslan.musicapp.util.ItemMoveCallback
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-/**
- * Populate the list of Top Albums based on user selected Artist
- * User can save the album for later use
- * User can delete the album if it's already stored locally
- * */
+
 @AndroidEntryPoint
 class TopAlbumFragment : BaseFragment<FragmentTopalbumsBinding>(FragmentTopalbumsBinding::inflate) {
     private val viewModel: TopAlbumViewModel by viewModels()
@@ -44,6 +41,8 @@ class TopAlbumFragment : BaseFragment<FragmentTopalbumsBinding>(FragmentTopalbum
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
         viewDataBinding?.apply {
             albumsRecyclerView.adapter = adapter
             lifecycleScope.launch {

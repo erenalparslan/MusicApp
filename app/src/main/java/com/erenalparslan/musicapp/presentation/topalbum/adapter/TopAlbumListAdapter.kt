@@ -1,5 +1,6 @@
 package com.erenalparslan.musicapp.presentation.topalbum.adapter
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -19,10 +20,10 @@ class TopAlbumListAdapter(
 ) : androidx.recyclerview.widget.ListAdapter<Album, TopAlbumListAdapter.AlbumViewHolder>(
     AlbumDiffUtils()
 ) {
-
+    var colors : Array<String> = arrayOf("#FEFBF3", "#F8F0DF")
     inner class AlbumViewHolder(private val binding: ItemAlbumBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(album: Album, position: Int) {
+        fun bind(album: Album, position: Int,colors : Array<String>) {
             binding.apply {
                 artistTextView.text = album.artistName
                 albumNameTextView.text = album.name
@@ -35,6 +36,7 @@ class TopAlbumListAdapter(
                 itemView.setOnClickListener {
                     itemClick.invoke(album)
                 }
+                itemView.setBackgroundColor(Color.parseColor(colors[position%2]))
                 Glide
                     .with(albumImageView.context)
                     .load(album.image)
@@ -72,7 +74,7 @@ class TopAlbumListAdapter(
         val item = getItem(pos)
 
         if (payload.isEmpty() || payload[0] !is Bundle) {
-            viewHolder.bind(item, pos)
+            viewHolder.bind(item, pos,colors)
         } else {
             val bundle = payload[0] as Bundle
             viewHolder.update(bundle)

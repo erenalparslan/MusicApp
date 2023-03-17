@@ -8,20 +8,22 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.erenalparslan.musicapp.R
 import com.erenalparslan.musicapp.core.util.extensions.hide
 import com.erenalparslan.musicapp.core.util.extensions.show
 import com.erenalparslan.musicapp.databinding.FragmentMainBinding
 import com.erenalparslan.musicapp.presentation.base.BaseFragment
-
 import com.erenalparslan.musicapp.presentation.main.adapter.AlbumListAdapter
 import com.erenalparslan.musicapp.presentation.main.paging.MainLoadStateAdapter
 import com.erenalparslan.musicapp.presentation.main.viewmodel.MainViewModel
 import com.erenalparslan.musicapp.presentationdelegate.OptionMenuDelegate
 import com.erenalparslan.musicapp.presentationdelegate.OptionMenuDelegateImpl
+import com.erenalparslan.musicapp.util.ItemMoveCallback
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.util.*
 
 /**
  * Populate the locally stored albums with pagination support
@@ -32,9 +34,15 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
     OptionMenuDelegate by OptionMenuDelegateImpl() {
     private val viewModel: MainViewModel by viewModels()
     private var adapter: AlbumListAdapter? = null
+    private lateinit var itemTouchHelperCallback: ItemMoveCallback
+    private lateinit var itemTouchHelper: ItemTouchHelper
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+
         adapter = AlbumListAdapter({
             findNavController().navigate(
                 MainFragmentDirections.actionMainFragmentToDetailFragment(
@@ -66,6 +74,9 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
                     // Show first time loading UI
                     albumsRecyclerView.show()
                     emptyTextView.hide()
+                    itemTouchHelperCallback = ItemMoveCallback(albumsRecyclerView.adapter!!)
+                    itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+                    itemTouchHelper.attachToRecyclerView(albumsRecyclerView)
                 }
 
                 loadState.append is LoadState.Loading -> {
@@ -76,6 +87,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
                     // Show empty UI as there's no data available
                     albumsRecyclerView.hide()
                     emptyTextView.show()
+
                 }
 
                 loadState.refresh is LoadState.Error -> {
@@ -102,4 +114,6 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
         adapter = null
         super.onDestroyView()
     }
+
+
 }

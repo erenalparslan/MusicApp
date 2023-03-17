@@ -1,9 +1,11 @@
 package com.erenalparslan.musicapp.presentation.main.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.erenalparslan.musicapp.R
@@ -17,9 +19,13 @@ class AlbumListAdapter(
     AlbumDiffUtils()
 ) {
 
+
+    var colors : Array<String> = arrayOf("#FEFBF3", "#F8F0DF")
+
     inner class AlbumViewHolder(private val binding: ItemAlbumBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(album: Album) {
+
+        fun bind(album: Album,colors : Array<String>,position: Int) {
             this.apply {
                 binding.apply {
                     artistTextView.text = album.artistName
@@ -28,6 +34,7 @@ class AlbumListAdapter(
                     itemView.setOnClickListener {
                         itemClick.invoke(album)
                     }
+                    itemView.setBackgroundColor(Color.parseColor(colors[position%2]))
                     Glide
                         .with(albumImageView.context)
                         .load(album.image)
@@ -50,7 +57,7 @@ class AlbumListAdapter(
     }
 
     override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {
-        getItem(position)?.let { holder.bind(it) }
+        getItem(position)?.let { holder.bind(it, colors,position)}
     }
 
     class AlbumDiffUtils : DiffUtil.ItemCallback<Album>() {

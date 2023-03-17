@@ -1,5 +1,6 @@
 package com.erenalparslan.musicapp.presentation.search.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
@@ -15,10 +16,10 @@ class ArtistListAdapter(
 ) : PagingDataAdapter<Artist, ArtistListAdapter.ArtistViewHolder>(
     CategoryMainDiffUtils()
 ) {
-
+    var colors : Array<String> = arrayOf("#FEFBF3", "#F8F0DF")
     inner class ArtistViewHolder(private val binding: ItemArtistBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(artist: Artist) {
+        fun bind(artist: Artist,colors : Array<String>,position: Int) {
             this.apply {
                 binding.apply {
                     artistNameTextView.text = artist.name
@@ -26,6 +27,7 @@ class ArtistListAdapter(
                     itemView.setOnClickListener {
                         itemClick.invoke(artist)
                     }
+                    itemView.setBackgroundColor(Color.parseColor(colors[position%2]))
                     Glide
                         .with(artistImageView.context)
                         .load(artist.image)
@@ -48,7 +50,7 @@ class ArtistListAdapter(
     }
 
     override fun onBindViewHolder(holder: ArtistViewHolder, position: Int) {
-        getItem(position)?.let { holder.bind(it) }
+        getItem(position)?.let { holder.bind(it, colors,position) }
     }
 
     class CategoryMainDiffUtils : DiffUtil.ItemCallback<Artist>() {

@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.erenalparslan.musicapp.data.local.entities.Album
 import com.erenalparslan.musicapp.domain.usecases.album.DeleteAlbum
 import com.erenalparslan.musicapp.domain.usecases.album.GetLocalAlbums
@@ -14,6 +16,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,6 +27,8 @@ class MainViewModel @Inject constructor(
     val deleteArtist: DeleteArtist
 ) : ViewModel() {
 
+
+
     val data = Pager(
         PagingConfig(
             pageSize = 5,
@@ -32,6 +37,8 @@ class MainViewModel @Inject constructor(
     ) {
         getLocalAlbums()
     }.flow.flowOn(Dispatchers.IO).cachedIn(viewModelScope)
+
+
 
     fun deleteAlbum(album: Album) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -44,4 +51,11 @@ class MainViewModel @Inject constructor(
             }
         }
     }
+
+
+
+
+
+
+
 }
