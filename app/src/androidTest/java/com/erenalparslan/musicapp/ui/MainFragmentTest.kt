@@ -6,6 +6,7 @@ import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import com.chnouman.lastfmapidemo.core.utils.launchFragmentInHiltContainer
@@ -56,4 +57,14 @@ class MainFragmentTest {
         )
         Truth.assertThat(navController.currentDestination?.id).isEqualTo(R.id.detailFragment)
     }
+
+    @Test
+    fun swipeTest() {
+
+        Espresso.onView(ViewMatchers.withId(R.id.albumsRecyclerView)).perform(ViewActions.swipeUp())
+
+        Espresso.onView(ViewMatchers.withId(R.id.albumsRecyclerView)).check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText("Lily Allen"))))
+
+    }
+
 }
