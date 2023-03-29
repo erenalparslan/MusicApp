@@ -13,6 +13,14 @@
         <li>Album Information</li>
         <liClean Interface</li>
       </List>
+      
+## Updates
+  <List>
+        <li>Drag and Drop </li>
+        <li>Design İmproved</li>
+        <li>Unit and UI Tests</li>
+    
+      </List>      
 
 ## Technologies
 
